@@ -1,0 +1,10 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  common-extension-workflows:
+    uses: supabase/xpg/.github/workflows/reusable_extension_ci.yml@27aedcb0a23bce2879e7b114369e9c937665082d # v2.7.0

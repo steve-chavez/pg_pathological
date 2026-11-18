@@ -1,0 +1,13 @@
+regression.*
+*.o
+*.so
+*.bc
+*.dylib
+results/*.out
+.history
+result*
+tags
+*.gcno
+*.gcda
+coverage.info
+coverage_html
