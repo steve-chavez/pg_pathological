@@ -49,4 +49,26 @@
 
 #pragma GCC diagnostic pop
 
+#define PG14_GTE (PG_VERSION_NUM >= 140000)
+
+#if PG14_GTE
+
+#define PROCESS_UTILITY_PARAMS                                                 \
+  PlannedStmt *pstmt, const char *queryString, bool readOnlyTree,              \
+      ProcessUtilityContext context, ParamListInfo params,                     \
+      QueryEnvironment *queryEnv, DestReceiver *dest, QueryCompletion *qc
+#define PROCESS_UTILITY_ARGS                                                   \
+  pstmt, queryString, readOnlyTree, context, params, queryEnv, dest, qc
+
+#else // PG13 and below
+
+#define PROCESS_UTILITY_PARAMS                                                 \
+  PlannedStmt *pstmt, const char *queryString, ProcessUtilityContext context,  \
+      ParamListInfo params, QueryEnvironment *queryEnv, DestReceiver *dest,    \
+      QueryCompletion *qc
+#define PROCESS_UTILITY_ARGS                                                   \
+  pstmt, queryString, context, params, queryEnv, dest, qc
+
+#endif
+
 #endif /* PG_PRELUDE_H */

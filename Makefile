@@ -25,18 +25,11 @@ else
     SHARED_EXT  := so
 endif
 
-EXTENSION = hello
-EXTVERSION = 0.1
-
-DATA = $(wildcard sql/*--*.sql)
-
-EXTRA_CLEAN = sql/$(EXTENSION)--$(EXTVERSION).sql $(EXTENSION).control
-
 TESTS = $(wildcard test/sql/*.sql)
 REGRESS = $(patsubst test/sql/%.sql,%,$(TESTS))
 REGRESS_OPTS = --use-existing --inputdir=test
 
-MODULE_big = $(EXTENSION)
+MODULE_big = pathological
 SRC = $(wildcard $(SRC_DIR)/*.c)
 
 ifdef BUILD_DIR
@@ -47,29 +40,21 @@ endif
 
 PG_CONFIG = pg_config
 
-PG_CPPFLAGS := $(CPPFLAGS) -DEXTVERSION=\"$(EXTVERSION)\"
+PG_CPPFLAGS := $(CPPFLAGS)
 
-all: sql/$(EXTENSION)--$(EXTVERSION).sql $(EXTENSION).control
+all:
 
-build: $(BUILD_DIR)/$(EXTENSION).$(SHARED_EXT) sql/$(EXTENSION)--$(EXTVERSION).sql $(EXTENSION).control
+build: $(BUILD_DIR)/$(MODULE_big).$(SHARED_EXT)
 
-$(BUILD_DIR)/.gitignore: sql/$(EXTENSION)--$(EXTVERSION).sql $(EXTENSION).control
-	mkdir -p $(BUILD_DIR)/extension
-	cp $(EXTENSION).control $(BUILD_DIR)/extension
-	cp sql/$(EXTENSION)--$(EXTVERSION).sql $(BUILD_DIR)/extension
+$(BUILD_DIR)/.gitignore:
+	mkdir -p $(BUILD_DIR)
 	echo "*" > $(BUILD_DIR)/.gitignore
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c $(BUILD_DIR)/.gitignore
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/$(EXTENSION).$(SHARED_EXT): $(EXTENSION).$(SHARED_EXT)
+$(BUILD_DIR)/$(MODULE_big).$(SHARED_EXT): $(MODULE_big).$(SHARED_EXT)
 	mv $? $@
-
-sql/$(EXTENSION)--$(EXTVERSION).sql: sql/$(EXTENSION).sql
-	cp $< $@
-
-$(EXTENSION).control:
-	sed "s/@EXTVERSION@/$(EXTVERSION)/g" $(EXTENSION).control.in > $@
 
 PGXS := $(shell $(PG_CONFIG) --pgxs)
 include $(PGXS)

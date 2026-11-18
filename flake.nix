@@ -1,6 +1,4 @@
 {
-  description = "Development shell for supautils";
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/91c9a64ce2a84e648d0cf9671274bb9c2fb9ba60";
     xpg = {
