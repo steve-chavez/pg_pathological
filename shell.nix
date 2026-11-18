@@ -17,7 +17,23 @@ in
   ),
 }:
 pkgs.mkShell {
-  buildInputs = [
+  buildInputs =
+  let
+    style = pkgs.writeShellScriptBin "style" ''
+      set -euo pipefail
+
+      ${pkgs.clang-tools}/bin/clang-format -i src/*.c src/*.h
+    '';
+    styleCheck = pkgs.writeShellScriptBin "style-check" ''
+      set -euo pipefail
+
+      ${pkgs.clang-tools}/bin/clang-format -i src/*.c src/*.h
+      ${pkgs.git}/bin/git diff-index --exit-code HEAD -- '*.c'
+    '';
+  in
+  [
+    style
+    styleCheck
     xpgPkgs.xpg
   ];
   shellHook = ''

@@ -3,7 +3,7 @@
 PG_MODULE_MAGIC;
 
 PG_FUNCTION_INFO_V1(hello);
-Datum hello(PG_FUNCTION_ARGS){
+Datum hello(PG_FUNCTION_ARGS) {
   text *input = PG_GETARG_TEXT_PP(0);
 
   StringInfoData buf;
@@ -15,7 +15,7 @@ Datum hello(PG_FUNCTION_ARGS){
     buf2[5] = 'A'; // Writing past the 4-byte heap buffer
     free(buf2);
   }
- 
+
   // UBSAN should flag this
   if (getenv("HELLO_NULL_PTR_DEREF")) {
     int *i = NULL;
